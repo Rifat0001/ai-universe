@@ -7,9 +7,9 @@ function dataLoad() {
 
 function displayData(values) {
     const container = document.getElementById('api-container');
-
-    values.forEach(value => {
+    values.slice(0, 6).forEach(value => {
         console.log(value)
+
         const div = document.createElement('div');
         div.innerHTML = `
         <div class="col">

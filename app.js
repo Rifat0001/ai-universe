@@ -36,9 +36,9 @@ function displayData(values) {
                 </div>
             </div>
             <span>
-            <button class="btn bg-danger-subtle rounded-circle"><i class="fa-solid fa-arrow-right text-danger" onclick="fetchDetails('${value.id}')" data-bs-toggle="modal"
-            data-bs-target="#singleTool"></i></button>
-            </span>
+            <button class="btn bg-danger-subtle rounded-circle"><i class="fa-solid fa-arrow-right text-danger" onclick="toolsDetail('${value.id}')" data-bs-toggle="modal"
+            data-bs-target="#exampleModal"></i></button>
+        </span>
           </div>
         </div>
       </div>
@@ -48,13 +48,15 @@ function displayData(values) {
 
 }
 
-function fetchDetails(id) {
+// fetching tools detail
+const toolsDetail = (id) => {
     let url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
     fetch(url)
-        .then(res => res.json())
-        .then(data => showDetails(data.data))
-}
+        .then((res) => res.json())
+        .then((data) => showToolsDetail(data.data));
+};
 
+// displaying tools detail
 const showToolsDetail = (toolsDetail) => {
     document.getElementById("modal-body").innerHTML = `
       <div class="row row-cols-1 row-cols-md-2 g-4 align-items-center justify-content-center">
@@ -115,7 +117,4 @@ const showToolsDetail = (toolsDetail) => {
   </div>
       `;
 };
-
-
-
 dataLoad();

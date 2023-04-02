@@ -1,3 +1,17 @@
+// start loader
+const toggleSpinner = isLoading => {
+    const loaderSection = document.getElementById('loader');
+    if (isLoading) {
+        loaderSection.classList.remove("d-none")
+    }
+    else {
+        loaderSection.classList.add("d-none")
+    }
+}
+// call spinner
+toggleSpinner(true);
+
+// start fetching the data from api 
 function dataLoad() {
     const url = `https://openapi.programming-hero.com/api/ai/tools`;
     fetch(url)
@@ -45,6 +59,17 @@ function displayData(values) {
         `
         container.appendChild(div);
     })
+
+    const seeMore = document.getElementById('see-more');
+    if (values.length < 6) {
+
+        seeMore.classList.add("d-none");
+    }
+    else {
+        seeMore.classList.remove("d-none");
+    }
+    // stop loader
+    toggleSpinner(false);
 
 }
 

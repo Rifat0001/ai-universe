@@ -36,8 +36,8 @@ function displayData(values) {
                 </div>
             </div>
             <span>
-                <button class="btn bg-danger-subtle rounded-circle"><i class="fa-solid fa-arrow-right text-danger" onclick="fetchToolsDetail('${value.id}')" data-bs-toggle="modal"
-                data-bs-target="#exampleModal"></i></button>
+            <button class="btn bg-danger-subtle rounded-circle"><i class="fa-solid fa-arrow-right text-danger" onclick="fetchDetails('${value.id}')" data-bs-toggle="modal"
+            data-bs-target="#singleTool"></i></button>
             </span>
           </div>
         </div>
@@ -47,4 +47,75 @@ function displayData(values) {
     })
 
 }
+
+function fetchDetails(id) {
+    let url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
+    fetch(url)
+        .then(res => res.json())
+        .then(data => showDetails(data.data))
+}
+
+const showToolsDetail = (toolsDetail) => {
+    document.getElementById("modal-body").innerHTML = `
+      <div class="row row-cols-1 row-cols-md-2 g-4 align-items-center justify-content-center">
+    <div class="col">
+      <div class="card bg-danger-subtle border-3 border-danger h-100">
+        <div class="card-body f-flex flex-column align-items-center p-4">
+          <p class="card-text fw-bold">${toolsDetail.description}</p>
+          <div class="d-flex gap-3 justify-content-between align-items-center flex-column flex-md-row">
+              <div class="p-4 bg-white rounded text-center text-success fw-bold">
+                  <span>${toolsDetail.pricing ? toolsDetail.pricing[0].price : "Free of cost/"}</span>
+                  <span>${toolsDetail.pricing ? toolsDetail.pricing[0].plan : "Basic"}</span>
+              </div>
+              <div class="p-4 bg-white rounded text-center text-warning fw-bold">
+                  <span>${toolsDetail.pricing ? toolsDetail.pricing[1].price : "Free of cost/"}</span>
+                  <span>${toolsDetail.pricing ? toolsDetail.pricing[1].plan : "Pro"}</span>
+              </div>
+              <div class="p-4 bg-white rounded text-center text-danger fw-bold">
+                  <span>${toolsDetail.pricing ? toolsDetail.pricing[2].price : "Free of cost/"}</span>
+                  <span>${toolsDetail.pricing ? toolsDetail.pricing[2].plan : "Enterprise"}</span>
+              </div>
+          </div>
+          <div class="d-flex justify-content-between gap-3 py-4">
+              <div>
+                  <h5>Features</h5>
+                  <ul>
+                      <li>${toolsDetail.features["1"].feature_name}</li>
+                      <li>${toolsDetail.features["2"].feature_name}</li>
+                      <li>${toolsDetail.features["3"].feature_name}</li>
+                      <li class ="${toolsDetail.features["4"] ? '' : 'd-none'}">Machine learning</li>
+                  </ul>
+              </div>
+              <div>
+                  <h5>Integrations</h5>
+                  <ul>
+                    ${toolsDetail.integrations ? `<li>${toolsDetail.integrations && toolsDetail.integrations[0] ? toolsDetail.integrations[0] : ``}</li>
+                    <li class="${toolsDetail.integrations && toolsDetail.integrations[1] === undefined ? 'd-none' : ''}">${toolsDetail.integrations && toolsDetail.integrations[1] ? toolsDetail.integrations[1] : ''}</li>
+                    <li class="${toolsDetail.integrations && toolsDetail.integrations[2] === undefined ? 'd-none' : ''}">${toolsDetail.integrations && toolsDetail.integrations[2] ? toolsDetail.integrations[2] : ''}</li>
+                    <li class="${toolsDetail.integrations && toolsDetail.integrations[3] === undefined ? 'd-none' : ''}">${toolsDetail.integrations && toolsDetail.integrations[3] ? toolsDetail.integrations[3] : ''}</li>
+                    <li class="${toolsDetail.integrations && toolsDetail.integrations[4] === undefined ? 'd-none' : ''}">${toolsDetail.integrations && toolsDetail.integrations[4] ? toolsDetail.integrations[4] : ''}</li>` : 'No data Found'}
+                  </ul>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card h-100 p-4 border-0 shadow">
+        <div>
+          <img src="${toolsDetail.image_link[0] ? toolsDetail.image_link[0] : "No Image Found"}" class="card-img-top" alt="...">
+          <span class =" btn btn-danger position-absolute top-10 end-70 ${toolsDetail.accuracy.score === null ? 'd-none' : ''}">${(toolsDetail.accuracy.score * 100) + "% Accuracy"}</span>
+        </div>
+        <div class="card-body text-center">
+          <h5 class="card-title">${toolsDetail.input_output_examples ? toolsDetail.input_output_examples[0].input : "Can you give any example?"}</h5>
+          <p class="card-text">${toolsDetail.input_output_examples ? toolsDetail.input_output_examples[0].output : "No! Not Yet! Take a break!!!"}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+      `;
+};
+
+
+
 dataLoad();

@@ -73,6 +73,78 @@ function displayData(values) {
 
 }
 
+function fetchMoreTools() {
+    const url = `https://openapi.programming-hero.com/api/ai/tools`;
+    fetch(url)
+        .then(res => res.json())
+        .then(data => showMoreTools(data.tools))
+}
+
+const showMoreTools = (data) => {
+    const toolsContainer = document.getElementById("api-container");
+    const seeMore = document.getElementById('see-more');
+    if (data.tools.length < 6) {
+
+        seeMore.classList.remove("d-none");
+    }
+    else {
+        seeMore.classList.add("d-none");
+    }
+
+    const sortCard = data.tools;
+    customSort = (a, b) => {
+        const dataA = new Date(a.published_in);
+        // console.log(dataA)
+        const dataB = new Date(b.published_in);
+        // console.log(dataB)
+        if (dataA > dataB) {
+            return 1;
+        }
+        else if (dataA < dataB) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+    sortCard.slice(6, 12).sort(customSort).forEach((singleTools) => {
+        toolsContainer.innerHTML += `
+              <div class="col">
+              <div class="card h-100 shadow border-0 p-3">
+                <img src="${singleTools.image}" class="card-img-top rounded-3" alt="..." width="437px" height="300px">
+                <div class="card-body">
+                  <h5 class="card-title">Features</h5>
+                  <p class="card-text">
+                      <ol class="px-3 m-0">
+                      <li class="${singleTools.features[0] === undefined ? 'd-none' : ''}">${singleTools.features[0]}</li>
+                      <li class="${singleTools.features[1] === undefined ? 'd-none' : ''}">${singleTools.features[1]}</li>
+                      <li class="${singleTools.features[2] === undefined ? 'd-none' : ''}">${singleTools.features[2]}</li>
+                      <li class="${singleTools.features[3] === undefined ? 'd-none' : ''}">${singleTools.features[3]}</li>
+                      <li class="${singleTools.features[4] === undefined ? 'd-none' : ''}">${singleTools.features[4]}</li>
+                      </ol>
+                  </p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center bg-white">
+                  <div>
+                      <h5 class="card-title">${singleTools.name}</h5>
+                      <div class="d-flex align-items-center gap-2">
+                          <i class="fa-regular fa-calendar-days"></i>
+                          <p class="m-0 p-0">${singleTools.published_in}</p>
+                      </div>
+                  </div>
+                  <span>
+                      <button class="btn bg-danger-subtle rounded-circle"><i class="fa-solid fa-arrow-right text-danger" onclick="fetchToolsDetail('${singleTools.id}')" data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+              `
+    })
+
+};
+
+
 // fetching tools detail
 const toolsDetail = (id) => {
     let url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
